@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer components {
-  .custom-class {
-    @apply bg-red-400;
+  .error {
+    @apply text-xs dark:text-red-400;
   }
 }

@@ -1,8 +1,13 @@
 import React from 'react'
 import Input from '../components/shared/Input'
 import { Link } from 'react-router-dom'
+import { useForm } from "react-hook-form";
+
 
 const RegisterUser = () => {
+  const { register, handleSubmit, watch, formState: { errors } } = useForm();
+  const onSubmit = data => console.log(data);
+
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -15,35 +20,39 @@ const RegisterUser = () => {
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Create an account
             </h1>
-            <form className="space-y-4 md:space-y-6" action="#">
+            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit(onSubmit)}>
               <Input
                 type="email"
                 labelText="Email address"
                 placeholder="user@mailinator.com"
                 name="email"
-                required
+                {...register("email", { required: "Email address is required!" })}
               />
+              {errors.email && <span className="error">{errors.email?.message}</span>}
               <Input
                 type="text"
                 labelText="Name"
                 placeholder="John doe"
                 name="name"
-                required
+                {...register("name", { required: "Name is required!" })}
               />
+              {errors.name && <span className="error">{errors.name?.message}</span>}
               <Input
                 type="password"
                 labelText="Password"
                 placeholder="••••••••"
                 name="password"
-                required
+                {...register("password", { required: "Password is required!" })}
               />
+              {errors.password && <span className="error">{errors.password?.message}</span>}
               <Input
                 type="password"
                 labelText="Confirm Password"
                 placeholder="••••••••"
-                name="confirm-password"
-                required
+                name="confirmPassword"
+                {...register("confirmPassword", { required: "Confirm password is required!" })}
               />
+              {errors.confirmPassword && <span className="error">{errors.confirmPassword?.message}</span>}
 
               <div className="flex items-start">
                 <div className="flex items-center h-5">
