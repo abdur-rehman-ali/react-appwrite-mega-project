@@ -1,12 +1,28 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Input from '../components/shared/Input'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from "react-hook-form";
+import authService from '../services/auth.service';
+import Loader from '../components/shared/Loader';
 
 
 const RegisterUser = () => {
+  const navigate = useNavigate()
+  const [isPending, setIsPending] = useState(false)
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
-  const onSubmit = data => console.log(data);
+  const onSubmit = async (data) => {
+    try {
+      setIsPending(true)
+      const response = await authService.registerUser(data)
+      setIsPending(false)
+      navigate('/')
+    } catch (error) {
+      console.log("🚀 ~ onSubmit ~ error:", error.message)
+      setIsPending(false)
+      alert(error.message)
+    }
+
+  };
 
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
@@ -62,7 +78,11 @@ const RegisterUser = () => {
                   <label htmlFor="terms" className="font-light text-gray-500 dark:text-gray-300">I accept the <a className="font-medium text-primary-600 hover:underline dark:text-primary-500" href="#">Terms and Conditions</a></label>
                 </div>
               </div>
-              <button type="submit" className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Create an account</button>
+              <button type="submit" className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 flex justify-center">
+                {
+                  isPending ? < Loader /> : "Create an account"
+                }
+              </button>
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 Already have an account? <Link to="/accounts/login" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Login here</Link>
               </p>
