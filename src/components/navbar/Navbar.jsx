@@ -1,23 +1,25 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import Logout from './Logout'
 
 const Navbar = () => {
+  const isAutheticated = true
 
   const navigationLinks = [
     {
       title: "Home",
       url: "/",
-      isAuthenticated: true,
+      isActive: true,
     },
     {
       title: "Register",
       url: "/accounts/register",
-      isAuthenticated: true,
+      isActive: true,
     },
     {
       title: "Login",
       url: "/accounts/login",
-      isAuthenticated: true,
+      isActive: true,
     },
   ]
 
@@ -41,10 +43,13 @@ const Navbar = () => {
           <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
             {
               Array.isArray(navigationLinks) && navigationLinks.map((navigationLink, index) => (
-                navigationLink.isAuthenticated && (<li key={index}>
+                navigationLink.isActive && (<li key={index}>
                   <Link to={`${navigationLink.url}`} className="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">{navigationLink.title}</Link>
                 </li>)
               ))
+            }
+            {
+              isAutheticated && <Logout />
             }
           </ul>
         </div>
