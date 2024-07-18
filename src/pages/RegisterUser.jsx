@@ -1,27 +1,24 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Input from '../components/shared/Input'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from "react-hook-form";
-import authService from '../services/auth.service';
 import Loader from '../components/shared/Loader';
-
+import { toast } from 'react-toastify';
+import { useRegisterUserMutation } from '../react-query/auth/auth.mutations';
 
 const RegisterUser = () => {
   const navigate = useNavigate()
-  const [isPending, setIsPending] = useState(false)
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
-  const onSubmit = async (data) => {
+  const { mutateAsync: registerUser, isPending } = useRegisterUserMutation()
+  const submitHandler = async (data) => {
     try {
-      setIsPending(true)
-      const response = await authService.registerUser(data)
-      setIsPending(false)
+      const response = await registerUser(data)
+      if (!response) { return }
       navigate('/')
+      toast.success("User registered successfully!")
     } catch (error) {
-      console.log("🚀 ~ onSubmit ~ error:", error.message)
-      setIsPending(false)
-      alert(error.message)
+      toast.error(error.message)
     }
-
   };
 
   return (
@@ -36,7 +33,7 @@ const RegisterUser = () => {
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Create an account
             </h1>
-            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit(onSubmit)}>
+            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit(submitHandler)}>
               <Input
                 type="email"
                 labelText="Email address"

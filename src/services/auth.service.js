@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { conf } from "../conf/conf";
 import { Client, Account, ID } from "appwrite";
 
@@ -19,7 +20,7 @@ class AuthService {
         return await this.loginUser(email, password)
       }
     } catch (error) {
-      throw error;
+      toast.error(error.message)
     }
   }
 
@@ -27,7 +28,7 @@ class AuthService {
     try {
       return await this.account.createEmailPasswordSession(email, password);
     } catch (error) {
-      throw error;
+      toast.error(error.message)
     }
   }
 
@@ -36,6 +37,7 @@ class AuthService {
       return await this.account.get();
     } catch (error) {
       console.error("getCurrentUser :: Error", error.message);
+      toast.error(error.message)
     }
     return null;
   }
@@ -44,7 +46,7 @@ class AuthService {
     try {
       return await this.account.deleteSession('current');
     } catch (error) {
-      throw error
+      toast.error(error.message)
     }
   }
 }
