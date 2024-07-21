@@ -14,11 +14,6 @@ const Navbar = () => {
       isActive: true,
     },
     {
-      title: "Register",
-      url: "/accounts/register",
-      isActive: true,
-    },
-    {
       title: "Login",
       url: "/accounts/login",
       isActive: !isAuthenticated,

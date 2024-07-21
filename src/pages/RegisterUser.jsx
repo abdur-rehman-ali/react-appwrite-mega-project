@@ -5,17 +5,24 @@ import { useForm } from "react-hook-form";
 import Loader from '../components/shared/Loader';
 import { toast } from 'react-toastify';
 import { useRegisterUserMutation } from '../react-query/mutations/auth.mutations';
+import authService from '../services/auth.service';
+import { useDispatch } from 'react-redux';
+import { logInUser } from '../store/features/authSlice';
 
 const RegisterUser = () => {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
   const { mutateAsync: registerUser, isPending } = useRegisterUserMutation()
   const submitHandler = async (data) => {
     try {
       const response = await registerUser(data)
       if (!response) { return }
-      navigate('/')
+      const currentUser = await authService.getCurrentUser()
+      if (!currentUser) { throw new Error("Failed to fetch logged in user") }
+      dispatch(logInUser(currentUser))
       toast.success("User registered successfully!")
+      navigate('/')
     } catch (error) {
       toast.error(error.message)
     }
