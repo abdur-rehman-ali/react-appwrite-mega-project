@@ -1,33 +1,29 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Input from '../components/shared/Input'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from "react-hook-form"
-import authService from '../services/auth.service'
 import Loader from '../components/shared/Loader'
+import { useLoginUserMutation } from '../react-query/auth/auth.mutations'
+import { toast } from 'react-toastify'
+import authService from '../services/auth.service'
 
 
 const LoginUser = () => {
-  const [isPending, setIsPending] = useState(false)
   const navigate = useNavigate()
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm()
+  const { register, handleSubmit, formState: { errors } } = useForm()
+  const { mutateAsync: loginUser, isPending } = useLoginUserMutation()
 
   const submitHandler = async (data) => {
     try {
-      setIsPending(true)
-      const response = await authService.loginUser(data.email, data.password)
-      if (response.userId) {
+      const response = await loginUser(data)
+      if (response.$id) {
+        toast.success("User logged in successfully!")
         navigate('/')
       } else {
-        throw new Error('Failed to login')
+        toast.error("Failed to login")
       }
-      setIsPending(false)
     } catch (error) {
-      setIsPending(false)
-      console.log("🚀 ~ submitHandler ~ error:", error.message)
+      toast.error(error.message)
     }
   }
 

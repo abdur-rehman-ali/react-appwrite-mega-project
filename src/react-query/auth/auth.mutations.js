@@ -10,3 +10,11 @@ export const useRegisterUserMutation = () => {
     ),
   })
 }
+
+export const useLoginUserMutation = () => {
+  return useMutation({
+    mutationFn: async ({ email, password }) => (
+      await authService.loginUser(email, password) 
+    ),
+  })
+}
