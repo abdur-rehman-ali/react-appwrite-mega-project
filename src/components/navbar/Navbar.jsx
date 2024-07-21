@@ -6,12 +6,18 @@ import { useSelector } from 'react-redux'
 
 const Navbar = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated)
+  const currentUser = useSelector((state) => state.auth.user)
 
   const navigationLinks = [
     {
       title: "Home",
       url: "/",
       isActive: true,
+    },
+    {
+      title: `${currentUser?.email}`,
+      url: "/",
+      isActive: isAuthenticated,
     },
     {
       title: "Login",
