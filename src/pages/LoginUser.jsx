@@ -3,8 +3,10 @@ import Input from '../components/shared/Input'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from "react-hook-form"
 import Loader from '../components/shared/Loader'
-import { useLoginUserMutation } from '../react-query/auth/auth.mutations'
+import { useLoginUserMutation } from '../react-query/mutations/auth.mutations'
 import { toast } from 'react-toastify'
+import { useDispatch } from 'react-redux'
+import { logInUser } from '../store/features/authSlice'
 import authService from '../services/auth.service'
 
 
@@ -12,16 +14,17 @@ const LoginUser = () => {
   const navigate = useNavigate()
   const { register, handleSubmit, formState: { errors } } = useForm()
   const { mutateAsync: loginUser, isPending } = useLoginUserMutation()
+  const dispatch = useDispatch()
 
   const submitHandler = async (data) => {
     try {
       const response = await loginUser(data)
-      if (response.$id) {
-        toast.success("User logged in successfully!")
-        navigate('/')
-      } else {
-        toast.error("Failed to login")
-      }
+      if (!response) { throw new Error("Failed to login") }
+      const currentUser = await authService.getCurrentUser()
+      if (!currentUser) { throw new Error("Failed to fetch logged in user") }
+      dispatch(logInUser(currentUser))
+      toast.success("User logged in successfully!")
+      navigate('/')
     } catch (error) {
       toast.error(error.message)
     }

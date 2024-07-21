@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from "react-hook-form";
 import Loader from '../components/shared/Loader';
 import { toast } from 'react-toastify';
-import { useRegisterUserMutation } from '../react-query/auth/auth.mutations';
+import { useRegisterUserMutation } from '../react-query/mutations/auth.mutations';
 
 const RegisterUser = () => {
   const navigate = useNavigate()

@@ -1,9 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import Logout from './Logout'
+import { useSelector } from 'react-redux'
+
 
 const Navbar = () => {
-  const isAutheticated = true
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated)
 
   const navigationLinks = [
     {
@@ -19,7 +21,7 @@ const Navbar = () => {
     {
       title: "Login",
       url: "/accounts/login",
-      isActive: true,
+      isActive: !isAuthenticated,
     },
   ]
 
@@ -49,7 +51,7 @@ const Navbar = () => {
               ))
             }
             {
-              isAutheticated && <Logout />
+              isAuthenticated && <Logout />
             }
           </ul>
         </div>

@@ -36,7 +36,6 @@ class AuthService {
     try {
       return await this.account.get();
     } catch (error) {
-      console.error("getCurrentUser :: Error", error.message);
       toast.error(error.message)
     }
     return null;
